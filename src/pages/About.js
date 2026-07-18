@@ -534,7 +534,7 @@ const About = () => {
       </section>
 
       {/* ── Leadership Team ───────────────────────────────────────────────── */}
-      <section className="about-team">
+      {/* <section className="about-team">
         <div className="container">
           <motion.div
             className="about-section-header"
@@ -598,7 +598,7 @@ const About = () => {
             ))}
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* ── Testimonials ──────────────────────────────────────────────────── */}
       <section className="about-testimonials">
