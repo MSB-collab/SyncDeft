@@ -1,0 +1,882 @@
+/* CareersSection.css - Premium Modern Design with Stunning Animations */
+
+/* ── Main Section ─────────────────────────────────────────────────────────── */
+.home-careers {
+  padding: 5.5rem 0;
+  background: #000000 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Animated Background ──────────────────────────────────────────────────── */
+.home-careers::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 40%, rgba(249, 195, 73, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 60%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(236, 72, 153, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 30% 20%, rgba(16, 185, 129, 0.02) 0%, transparent 40%);
+  z-index: 0;
+  pointer-events: none;
+  animation: bgPulseCareers 14s ease-in-out infinite;
+}
+
+@keyframes bgPulseCareers {
+  0%, 100% { 
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  25% { 
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  50% { 
+    opacity: 0.4;
+    transform: scale(0.94);
+  }
+  75% { 
+    opacity: 0.8;
+    transform: scale(1.04);
+  }
+}
+
+/* ── Floating Particles ───────────────────────────────────────────────────── */
+.home-careers::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(2px 2px at 10% 25%, rgba(249, 195, 73, 0.15), transparent),
+    radial-gradient(2px 2px at 35% 65%, rgba(249, 195, 73, 0.1), transparent),
+    radial-gradient(3px 3px at 55% 15%, rgba(249, 195, 73, 0.08), transparent),
+    radial-gradient(2px 2px at 75% 75%, rgba(249, 195, 73, 0.12), transparent),
+    radial-gradient(2px 2px at 90% 35%, rgba(249, 195, 73, 0.1), transparent),
+    radial-gradient(3px 3px at 20% 90%, rgba(249, 195, 73, 0.06), transparent),
+    radial-gradient(2px 2px at 65% 10%, rgba(249, 195, 73, 0.07), transparent),
+    radial-gradient(2px 2px at 45% 50%, rgba(249, 195, 73, 0.05), transparent);
+  background-size: 200% 200%;
+  z-index: 0;
+  pointer-events: none;
+  animation: particlesCareers 30s ease-in-out infinite;
+}
+
+@keyframes particlesCareers {
+  0% {
+    background-position: 0% 0%;
+    opacity: 0.3;
+  }
+  20% {
+    background-position: 30% 100%;
+    opacity: 0.9;
+  }
+  40% {
+    background-position: 60% 30%;
+    opacity: 0.4;
+  }
+  60% {
+    background-position: 100% 80%;
+    opacity: 0.8;
+  }
+  80% {
+    background-position: 70% 10%;
+    opacity: 0.5;
+  }
+  100% {
+    background-position: 0% 0%;
+    opacity: 0.3;
+  }
+}
+
+/* ── Animated Orbs ────────────────────────────────────────────────────────── */
+.home-careers .bg-orbs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.home-careers .bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  will-change: transform;
+}
+
+.home-careers .bg-orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(249, 195, 73, 0.08), transparent);
+  top: -200px;
+  right: -100px;
+  animation: orbFloatCareers1 20s ease-in-out infinite;
+}
+
+.home-careers .bg-orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.06), transparent);
+  bottom: -150px;
+  left: -100px;
+  animation: orbFloatCareers2 22s ease-in-out infinite;
+}
+
+.home-careers .bg-orb-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.04), transparent);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbFloatCareers3 25s ease-in-out infinite;
+}
+
+@keyframes orbFloatCareers1 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.12; }
+  25% { transform: translate(-100px, -60px) scale(1.4); opacity: 0.3; }
+  50% { transform: translate(80px, -100px) scale(0.6); opacity: 0.08; }
+  75% { transform: translate(-60px, 90px) scale(1.3); opacity: 0.25; }
+}
+
+@keyframes orbFloatCareers2 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.1; }
+  33% { transform: translate(90px, 50px) scale(1.5); opacity: 0.25; }
+  66% { transform: translate(-80px, -90px) scale(0.6); opacity: 0.06; }
+}
+
+@keyframes orbFloatCareers3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.08; }
+  50% { transform: translate(-50%, -50%) scale(2); opacity: 0.2; }
+}
+
+/* ── Container ────────────────────────────────────────────────────────────── */
+.home-careers .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Section Header - Premium Animation ───────────────────────────────────── */
+.section-header-careers {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-header-careers .section-title {
+  font-size: clamp(2.5rem, 5vw, 3.8rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+  animation: titleRevealCareers 1s ease-out both;
+  opacity: 0;
+}
+
+@keyframes titleRevealCareers {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.85);
+    clip-path: inset(0 100% 0 0);
+    filter: blur(15px);
+  }
+  60% {
+    transform: translateY(-8px) scale(1.02);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+  }
+}
+
+.section-title .highlight-careers {
+  color: #E5B63E;
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(135deg, #E5B63E, #f0c84a, #E5B63E, #f5d85a, #E5B63E);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientCareers 6s ease-in-out infinite;
+}
+
+@keyframes gradientCareers {
+  0%, 100% { background-position: 0% 50%; }
+  25% { background-position: 50% 0%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 50% 100%; }
+}
+
+.section-title .highlight-careers::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -20px;
+  right: -20px;
+  bottom: -10px;
+  background: radial-gradient(circle, rgba(229, 182, 62, 0.12), transparent 70%);
+  border-radius: 30px;
+  animation: glowPulseCareers 3s ease-in-out infinite;
+  -webkit-text-fill-color: initial;
+}
+
+@keyframes glowPulseCareers {
+  0%, 100% { 
+    opacity: 0.2; 
+    transform: scale(0.8); 
+    filter: blur(8px);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.3); 
+    filter: blur(15px);
+  }
+}
+
+.section-title-underline-careers {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #E5B63E, #f0c84a, #E5B63E);
+  background-size: 200% 200%;
+  margin: 0 auto 1.5rem;
+  border-radius: 4px;
+  animation: underlineCareers 3s ease-in-out infinite, underlineAppearCareers 1s ease-out 0.3s both;
+}
+
+@keyframes underlineAppearCareers {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes underlineCareers {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.section-header-careers .section-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.15rem;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.8;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  animation: subtitleCareers 1s ease-out 0.3s both;
+  opacity: 0;
+}
+
+@keyframes subtitleCareers {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* ── Jobs Grid ────────────────────────────────────────────────────────────── */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* ── Job Card - Premium Design ───────────────────────────────────────────── */
+.job-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 2.25rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  animation: cardEntryCareers 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Staggered animation delays */
+.job-card:nth-child(1) { animation-delay: 0.1s; }
+.job-card:nth-child(2) { animation-delay: 0.25s; }
+.job-card:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes cardEntryCareers {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+    filter: blur(5px);
+  }
+  60% {
+    transform: translateY(-10px) scale(1.02);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* ── Card Glow Effect ────────────────────────────────────────────────────── */
+.job-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(249, 195, 73, 0.06),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  border-radius: 20px;
+  z-index: 0;
+}
+
+.job-card:hover::before {
+  opacity: 1;
+}
+
+/* ── Card Border Animation ────────────────────────────────────────────────── */
+.job-card::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 22px;
+  background: conic-gradient(from 0deg,
+    transparent,
+    rgba(249, 195, 73, 0.15),
+    transparent 25%,
+    rgba(249, 195, 73, 0.1),
+    transparent 50%,
+    rgba(249, 195, 73, 0.15),
+    transparent 75%,
+    rgba(249, 195, 73, 0.1),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  z-index: 0;
+  animation: borderRotateCareers 4s linear infinite;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 2px;
+}
+
+.job-card:hover::after {
+  opacity: 1;
+}
+
+@keyframes borderRotateCareers {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.job-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(249, 195, 73, 0.12), 
+              0 20px 40px rgba(0, 0, 0, 0.6);
+  border-color: rgba(249, 195, 73, 0.3) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)) !important;
+}
+
+/* ── Job Header ───────────────────────────────────────────────────────────── */
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.job-header h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.job-header h3::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #E5B63E, #f0c84a);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.job-card:hover .job-header h3::after {
+  width: 100%;
+}
+
+.job-card:hover .job-header h3 {
+  color: #E5B63E;
+  transform: translateX(5px);
+}
+
+/* ── Job Type Badge ───────────────────────────────────────────────────────── */
+.job-type {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  letter-spacing: 0.05em;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+
+.job-type.full-time {
+  background: rgba(22, 101, 52, 0.15);
+  color: #dcfce7;
+  border-color: rgba(22, 101, 52, 0.3);
+}
+
+.job-type.part-time {
+  background: rgba(30, 58, 138, 0.15);
+  color: #bfdbfe;
+  border-color: rgba(30, 58, 138, 0.3);
+}
+
+.job-type.contract {
+  background: rgba(146, 64, 14, 0.15);
+  color: #fed7aa;
+  border-color: rgba(146, 64, 14, 0.3);
+}
+
+.job-type.remote {
+  background: rgba(17, 94, 89, 0.15);
+  color: #a7f3d0;
+  border-color: rgba(17, 94, 89, 0.3);
+}
+
+.job-card:hover .job-type {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(249, 195, 73, 0.1);
+}
+
+/* ── Job Details ──────────────────────────────────────────────────────────── */
+.job-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin: 1rem 0 1.25rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  position: relative;
+  z-index: 1;
+}
+
+.job-details span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+.job-details i {
+  color: #E5B63E;
+  font-size: 0.85rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.job-card:hover .job-details i {
+  color: #f0c84a;
+  transform: scale(1.2);
+}
+
+.job-card:hover .job-details span {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── Job Description ──────────────────────────────────────────────────────── */
+.job-card p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.job-card:hover p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ── Job Card Footer ──────────────────────────────────────────────────────── */
+.job-card-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1.25rem;
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Apply Button ─────────────────────────────────────────────────────────── */
+.apply-btn {
+  padding: 10px 24px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 50px;
+  border: 2px solid #E5B63E;
+  background: transparent;
+  color: #E5B63E;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.02em;
+}
+
+.apply-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(229, 182, 62, 0.1), transparent);
+  transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apply-btn:hover::before {
+  left: 100%;
+}
+
+.apply-btn:hover {
+  background: #E5B63E;
+  color: #000000;
+  transform: translateX(6px) scale(1.05);
+  box-shadow: 0 8px 30px rgba(229, 182, 62, 0.3);
+}
+
+.apply-btn:active {
+  transform: scale(0.95);
+}
+
+.apply-btn .btn-arrow {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apply-btn:hover .btn-arrow {
+  transform: translateX(6px);
+}
+
+/* ── Job Card Hover Animation ────────────────────────────────────────────── */
+.job-card .job-icon {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(249, 195, 73, 0.05), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+}
+
+.job-card:hover .job-icon {
+  opacity: 1;
+  transform: scale(1.5);
+}
+
+/* ── View All Button ──────────────────────────────────────────────────────── */
+.section-action {
+  margin-top: 3.5rem;
+  text-align: center;
+}
+
+.view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2.5rem;
+  background: transparent;
+  border: 2px solid rgba(229, 182, 62, 0.3);
+  color: #E5B63E;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.view-all-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(229, 182, 62, 0.1), transparent);
+  transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.view-all-btn:hover::before {
+  left: 100%;
+}
+
+.view-all-btn::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 52px;
+  background: conic-gradient(from 0deg, 
+    transparent, 
+    rgba(229, 182, 62, 0.2), 
+    transparent 30%, 
+    rgba(229, 182, 62, 0.2), 
+    transparent 60%, 
+    rgba(229, 182, 62, 0.2), 
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  animation: borderRotateBtnCareers 3s linear infinite;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 2px;
+  z-index: -1;
+}
+
+.view-all-btn:hover::after {
+  opacity: 1;
+}
+
+@keyframes borderRotateBtnCareers {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.view-all-btn:hover {
+  background: rgba(229, 182, 62, 0.1);
+  border-color: #E5B63E;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 40px rgba(229, 182, 62, 0.2);
+}
+
+.view-all-btn:active {
+  transform: scale(0.95);
+}
+
+.view-all-btn .btn-arrow {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.view-all-btn:hover .btn-arrow {
+  transform: translateX(8px);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .home-careers {
+    padding: 5rem 0;
+  }
+  
+  .section-header-careers .section-title {
+    font-size: 2.8rem;
+  }
+  
+  .jobs-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-careers {
+    padding: 4rem 0;
+  }
+  
+  .section-header-careers {
+    margin-bottom: 3rem;
+  }
+  
+  .section-header-careers .section-title {
+    font-size: 2.2rem;
+  }
+  
+  .section-header-careers .section-subtitle {
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
+  
+  .jobs-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .job-card {
+    padding: 1.75rem;
+    border-radius: 16px;
+  }
+  
+  .job-header h3 {
+    font-size: 1.15rem;
+  }
+  
+  .job-details {
+    font-size: 0.8rem;
+    gap: 8px 16px;
+  }
+  
+  .job-card p {
+    font-size: 0.9rem;
+  }
+  
+  .apply-btn {
+    padding: 8px 18px;
+    font-size: 0.8rem;
+  }
+  
+  .view-all-btn {
+    padding: 0.8rem 2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-careers {
+    padding: 3rem 0;
+  }
+  
+  .section-header-careers .section-title {
+    font-size: 1.8rem;
+  }
+  
+  .section-header-careers .section-subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .job-card {
+    padding: 1.5rem;
+    border-radius: 14px;
+  }
+  
+  .job-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .job-header h3 {
+    font-size: 1.05rem;
+  }
+  
+  .job-type {
+    font-size: 0.65rem;
+    padding: 4px 10px;
+  }
+  
+  .job-details {
+    font-size: 0.75rem;
+    gap: 6px 12px;
+  }
+  
+  .job-details i {
+    font-size: 0.75rem;
+  }
+  
+  .job-card p {
+    font-size: 0.85rem;
+    -webkit-line-clamp: 2;
+  }
+  
+  .job-card-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+  
+  .apply-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  .view-all-btn {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ── Scroll Animation for Section ────────────────────────────────────────── */
+.home-careers {
+  scroll-behavior: smooth;
+  animation: sectionAppearCareers 0.8s ease-out forwards;
+}
+
+@keyframes sectionAppearCareers {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

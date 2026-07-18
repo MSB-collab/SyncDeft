@@ -1,0 +1,786 @@
+/* IndustriesSection.css - Premium Modern Design */
+.industries-section {
+  position: relative;
+  padding: 5.5rem 0;
+  background: #0a0a0f !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+/* ============================================
+   MODERN ANIMATED BACKGROUND
+   ============================================ */
+.industries-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* LAYER 1: Gradient Orbs */
+.industries-orbs-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.industries-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: orbFloat 20s ease-in-out infinite;
+}
+
+.industries-orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(249, 195, 73, 0.08), rgba(249, 195, 73, 0));
+  top: -200px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.industries-orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+  bottom: -150px;
+  left: -100px;
+  animation-delay: -5s;
+}
+
+.industries-orb-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(249, 195, 73, 0.05), rgba(249, 195, 73, 0));
+  top: 30%;
+  left: 10%;
+  animation-delay: -10s;
+}
+
+.industries-orb-4 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+  bottom: 20%;
+  right: 10%;
+  animation-delay: -15s;
+}
+
+@keyframes orbFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(60px, -30px) scale(1.1);
+  }
+  50% {
+    transform: translate(-30px, 60px) scale(0.9);
+  }
+  75% {
+    transform: translate(40px, 20px) scale(1.05);
+  }
+}
+
+/* LAYER 2: Floating Shapes */
+.industries-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.industries-shape {
+  position: absolute;
+  opacity: 0.03;
+  border: 1px solid rgba(249, 195, 73, 0.08);
+}
+
+.shape-1 {
+  width: 80px;
+  height: 80px;
+  top: 10%;
+  left: 5%;
+  border-radius: 50%;
+}
+.shape-2 {
+  width: 60px;
+  height: 60px;
+  top: 70%;
+  right: 8%;
+  border-radius: 4px;
+  transform: rotate(45deg);
+}
+.shape-3 {
+  width: 100px;
+  height: 100px;
+  top: 40%;
+  left: 2%;
+  border-radius: 8px;
+  border-color: rgba(255, 255, 255, 0.04);
+}
+.shape-4 {
+  width: 50px;
+  height: 50px;
+  top: 15%;
+  right: 5%;
+  border-radius: 50%;
+  border-color: rgba(249, 195, 73, 0.05);
+}
+.shape-5 {
+  width: 70px;
+  height: 70px;
+  bottom: 30%;
+  left: 10%;
+  border-radius: 4px;
+  border-color: rgba(255, 255, 255, 0.04);
+}
+.shape-6 {
+  width: 40px;
+  height: 40px;
+  top: 55%;
+  right: 15%;
+  border-radius: 50%;
+  border-color: rgba(249, 195, 73, 0.05);
+}
+.shape-7 {
+  width: 90px;
+  height: 90px;
+  bottom: 10%;
+  right: 20%;
+  border-radius: 12px;
+  transform: rotate(30deg);
+  border-color: rgba(255, 255, 255, 0.03);
+}
+.shape-8 {
+  width: 45px;
+  height: 45px;
+  top: 20%;
+  left: 30%;
+  border-radius: 50%;
+  border-color: rgba(249, 195, 73, 0.04);
+}
+
+/* LAYER 3: Particles */
+.industries-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.industries-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* LAYER 4: Subtle Grid Overlay */
+.industries-grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.5;
+}
+
+/* LAYER 5: Noise Texture */
+.industries-noise {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.012;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  animation: noiseAnim 0.5s steps(2) infinite;
+}
+
+@keyframes noiseAnim {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, -3%); }
+  50% { transform: translate(3%, 3%); }
+  75% { transform: translate(-2%, 2%); }
+  100% { transform: translate(2%, -2%); }
+}
+
+/* ============================================
+   HEADER SECTION
+   ============================================ */
+.industries-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.industries-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 22px;
+  background: rgba(249, 195, 73, 0.06);
+  border: 1px solid rgba(249, 195, 73, 0.12);
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #f9c349;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.industries-badge:hover {
+  background: rgba(249, 195, 73, 0.1);
+  border-color: rgba(249, 195, 73, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(249, 195, 73, 0.08);
+}
+
+.badge-icon {
+  display: inline-block;
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.3) rotate(8deg); }
+}
+
+.section-title {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.3);
+}
+
+.section-title .highlight {
+  background: linear-gradient(135deg, #f9c349, #f5a623);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.title-underline-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem auto 1.5rem;
+  max-width: 180px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(249, 195, 73, 0.06);
+  overflow: hidden;
+}
+
+.title-underline {
+  height: 100%;
+  background: linear-gradient(90deg, #f9c349, #f5a623);
+  border-radius: 2px;
+  transform-origin: left;
+  box-shadow: 0 0 30px rgba(249, 195, 73, 0.1);
+}
+
+.section-subtitle {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.05rem;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.7;
+}
+
+/* Counter */
+.industries-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  background: rgba(249, 195, 73, 0.04);
+  border: 1px solid rgba(249, 195, 73, 0.06);
+  border-radius: 50px;
+}
+
+.counter-number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #f9c349;
+  line-height: 1;
+}
+
+.counter-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 500;
+}
+
+/* ============================================
+   CARDS GRID
+   ============================================ */
+.industries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.industry-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(10, 10, 15, 0.95), rgba(20, 20, 30, 0.95));
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transform: perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg)) translateY(0px);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+/* Card Glow */
+.industry-card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(249, 195, 73, 0.04),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.industry-card:hover .industry-card-glow {
+  opacity: 1;
+}
+
+/* Card Border Accent */
+.industry-card-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f9c349, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.industry-card:hover .industry-card-border {
+  transform: scaleX(1);
+}
+
+/* Card Pattern */
+.industry-card-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(249, 195, 73, 0.015) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.01) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Card Hover */
+.industry-card:hover {
+  border-color: rgba(249, 195, 73, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(249, 195, 73, 0.03);
+  transform: perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg)) translateY(-8px) scale(1.01);
+}
+
+/* Icon */
+.industry-icon-wrapper {
+  color: #f9c349;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(249, 195, 73, 0.06);
+  border-radius: 14px;
+  border: 1px solid rgba(249, 195, 73, 0.08);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.industry-card:hover .industry-icon-wrapper {
+  background: rgba(249, 195, 73, 0.1);
+  border-color: rgba(249, 195, 73, 0.15);
+  transform: scale(1.05) rotate(3deg);
+  box-shadow: 0 0 30px rgba(249, 195, 73, 0.05);
+}
+
+/* Number Badge */
+.industry-number-badge {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 3rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.02);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-family: 'Inter', -apple-system, sans-serif;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.industry-card:hover .industry-number-badge {
+  color: rgba(249, 195, 73, 0.04);
+  transform: scale(1.1) rotate(-3deg);
+}
+
+/* Card Content */
+.industry-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.01em;
+  transition: color 0.3s ease;
+}
+
+.industry-card:hover h3 {
+  color: #f9c349;
+}
+
+.industry-card p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+  flex-grow: 1;
+}
+
+/* Card Footer */
+.industry-card-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tech-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.tech-tag:hover {
+  background: rgba(249, 195, 73, 0.08);
+  color: #f9c349;
+  border-color: rgba(249, 195, 73, 0.12);
+}
+
+/* Hover Overlay */
+.industry-hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 15, 0.96);
+  backdrop-filter: blur(12px);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 20;
+  border-radius: 20px;
+}
+
+.industry-card:hover .industry-hover-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hover-content {
+  width: 100%;
+  transform: translateY(15px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.industry-card:hover .hover-content {
+  transform: translateY(0);
+}
+
+.hover-content h4 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #f9c349;
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.01em;
+}
+
+.related-solutions {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.2rem 0;
+  width: 100%;
+}
+
+.related-solutions li {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  transition: color 0.3s ease;
+}
+
+.related-solutions li:hover {
+  color: #ffffff;
+}
+
+.solution-icon {
+  color: #f9c349;
+  font-size: 0.6rem;
+  flex-shrink: 0;
+}
+
+.tech-stack-mini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 1rem;
+}
+
+.tech-stack-mini span {
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: rgba(249, 195, 73, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(249, 195, 73, 0.04);
+  transition: all 0.3s ease;
+}
+
+.tech-stack-mini span:hover {
+  background: rgba(249, 195, 73, 0.12);
+  color: #f9c349;
+  border-color: rgba(249, 195, 73, 0.1);
+}
+
+.hover-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #f9c349;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.hover-cta:hover {
+  border-bottom-color: #f9c349;
+  gap: 12px;
+}
+
+.hover-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.hover-cta:hover .hover-arrow {
+  transform: translateX(6px);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .industries-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .industries-section {
+    padding: 3.5rem 0;
+  }
+
+  .industries-grid {
+    grid-template-columns: 1fr;
+    max-width: 450px;
+    margin: 0 auto;
+  }
+
+  .industry-card {
+    min-height: 320px;
+    padding: 2rem 1.5rem;
+  }
+
+  .industry-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    font-size: 1.6rem;
+  }
+
+  .industry-number-badge {
+    font-size: 2.5rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .industries-orb-1,
+  .industries-orb-2,
+  .industries-orb-3,
+  .industries-orb-4 {
+    opacity: 0.4;
+  }
+
+  .industries-shape {
+    display: none;
+  }
+
+  .industries-grid-overlay {
+    background-size: 50px 50px;
+  }
+
+  .industries-counter {
+    padding: 6px 16px;
+  }
+
+  .counter-number {
+    font-size: 1.2rem;
+  }
+
+  .counter-label {
+    font-size: 0.75rem;
+  }
+
+  .industry-hover-overlay {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .industry-card {
+    padding: 1.5rem 1rem;
+    min-height: 280px;
+  }
+
+  .industry-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+  }
+
+  .industry-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .industry-card p {
+    font-size: 0.85rem;
+  }
+
+  .industry-number-badge {
+    font-size: 2rem;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .tech-tags {
+    gap: 4px;
+  }
+
+  .tech-tag {
+    font-size: 0.6rem;
+    padding: 3px 8px;
+  }
+
+  .industry-hover-overlay {
+    padding: 1rem;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .industries-orb,
+  .industries-particle,
+  .industries-shape,
+  .industries-noise {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .industry-card {
+    transition: none !important;
+  }
+  
+  .industries-grid-overlay {
+    animation: none !important;
+  }
+}
