@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -57,9 +57,9 @@ function App() {
             <Route path="/proof" element={<AnimatedPage><Proof /></AnimatedPage>} />
             <Route path="/case-studies" element={<AnimatedPage><CaseStudies /></AnimatedPage>} />
             <Route path="/case-studies/:slug" element={<AnimatedPage><CaseStudyDetail /></AnimatedPage>} />
-            {/* Catch-all route - redirects to Home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            
           </Routes>
+          
         </AnimatePresence>
       </main>
       <Footer />
