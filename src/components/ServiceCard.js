@@ -7,23 +7,17 @@ import './ServiceCard.css';
 const ServiceCard = ({ service, index, parallaxY }) => {
   const navigate = useNavigate();
   const cardRef = useRef(null);
-  const isInView = useInView(cardRef, { once: false, amount: 0.3 });
+  const isInView = useInView(cardRef, { once: false, amount: 0.2 });
   const controls = useAnimation();
   const [isHovered, setIsHovered] = useState(false);
 
-  // Different animation variants based on card position
+  // ===== BIG MODERN ANIMATIONS =====
   const getCardVariants = () => {
-    const position = index % 3; // 0: left, 1: center, 2: right
-    
+    const position = index % 3;
     switch(position) {
-      case 0: // Left card - slides from left with rotation
+      case 0:
         return {
-          hidden: { 
-            opacity: 0, 
-            x: -120,
-            rotateY: -15,
-            scale: 0.85
-          },
+          hidden: { opacity: 0, x: -150, rotateY: -20, scale: 0.8 },
           visible: {
             opacity: 1,
             x: 0,
@@ -31,21 +25,15 @@ const ServiceCard = ({ service, index, parallaxY }) => {
             scale: 1,
             transition: {
               type: 'spring',
-              stiffness: 100,
-              damping: 20,
-              delay: index * 0.15,
-              staggerChildren: 0.1
+              stiffness: 90,
+              damping: 22,
+              delay: index * 0.12,
             }
           }
         };
-      case 1: // Center card - zooms in with glow
+      case 1:
         return {
-          hidden: { 
-            opacity: 0, 
-            scale: 0.7,
-            y: 80,
-            filter: 'blur(10px)'
-          },
+          hidden: { opacity: 0, scale: 0.6, y: 100, filter: 'blur(12px)' },
           visible: {
             opacity: 1,
             scale: 1,
@@ -53,20 +41,15 @@ const ServiceCard = ({ service, index, parallaxY }) => {
             filter: 'blur(0px)',
             transition: {
               type: 'spring',
-              stiffness: 80,
+              stiffness: 70,
               damping: 18,
-              delay: index * 0.15 + 0.1
+              delay: index * 0.12 + 0.1
             }
           }
         };
-      case 2: // Right card - slides from right with rotation
+      case 2:
         return {
-          hidden: { 
-            opacity: 0, 
-            x: 120,
-            rotateY: 15,
-            scale: 0.85
-          },
+          hidden: { opacity: 0, x: 150, rotateY: 20, scale: 0.8 },
           visible: {
             opacity: 1,
             x: 0,
@@ -74,157 +57,148 @@ const ServiceCard = ({ service, index, parallaxY }) => {
             scale: 1,
             transition: {
               type: 'spring',
-              stiffness: 100,
-              damping: 20,
-              delay: index * 0.15 + 0.2
+              stiffness: 90,
+              damping: 22,
+              delay: index * 0.12 + 0.2
             }
           }
         };
       default:
         return {
-          hidden: { opacity: 0, y: 50 },
-          visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.6, delay: index * 0.1 }
-          }
+          hidden: { opacity: 0, y: 60 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.7, delay: index * 0.1 } }
         };
     }
   };
 
-  // Floating animation variants
+  // ===== FLOATING (bigger & smoother) =====
   const floatVariants = {
     initial: { y: 0 },
     animate: {
-      y: [0, -8, 0],
+      y: [0, -12, 0],
       transition: {
-        duration: 3 + index * 0.5,
+        duration: 4 + index * 0.4,
         repeat: Infinity,
         ease: "easeInOut",
-        delay: index * 0.3
+        delay: index * 0.25
       }
     },
     hover: {
-      y: -12,
-      transition: { type: 'spring', stiffness: 300, damping: 20 }
+      y: -18,
+      transition: { type: 'spring', stiffness: 250, damping: 18 }
     }
   };
 
-  // Icon pulse animation
+  // ===== ICON (big & bold) =====
   const iconVariants = {
-    hidden: { scale: 0, rotate: -180 },
+    hidden: { scale: 0, rotate: -200 },
     visible: {
       scale: 1,
       rotate: 0,
       transition: {
         type: 'spring',
-        stiffness: 200,
-        damping: 15,
-        delay: index * 0.15 + 0.3
+        stiffness: 180,
+        damping: 14,
+        delay: index * 0.12 + 0.25
       }
     },
     hover: {
-      scale: 1.2,
-      rotate: 10,
-      transition: { type: 'spring', stiffness: 300, damping: 10 }
+      scale: 1.25,
+      rotate: 12,
+      transition: { type: 'spring', stiffness: 280, damping: 10 }
     }
   };
 
-  // Highlight items stagger
+  // ===== HIGHLIGHTS STAGGER =====
   const highlightContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.2 + index * 0.1
+        staggerChildren: 0.1,
+        delayChildren: 0.25 + index * 0.1
       }
     }
   };
 
   const highlightItemVariants = {
-    hidden: { opacity: 0, x: -20 },
+    hidden: { opacity: 0, x: -25 },
     visible: {
       opacity: 1,
       x: 0,
-      transition: { type: 'spring', stiffness: 120, damping: 12 }
+      transition: { type: 'spring', stiffness: 140, damping: 14 }
     }
   };
 
-  // Glow pulse animation
+  // ===== GLOW (big & dramatic) =====
   const glowVariants = {
-    initial: { opacity: 0.3, scale: 1 },
+    initial: { opacity: 0.2, scale: 0.9 },
     animate: {
-      opacity: [0.3, 0.6, 0.3],
-      scale: [1, 1.05, 1],
+      opacity: [0.2, 0.7, 0.2],
+      scale: [0.9, 1.1, 0.9],
       transition: {
-        duration: 4 + index,
+        duration: 5 + index,
         repeat: Infinity,
         ease: "easeInOut"
       }
     },
     hover: {
-      opacity: 0.8,
-      scale: 1.08,
-      transition: { duration: 0.5 }
+      opacity: 1,
+      scale: 1.2,
+      transition: { duration: 0.6 }
     }
   };
 
-  // Mouse move handler for 3D tilt
+  // ===== 3D TILT =====
   const handleMouseMove = (e) => {
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
     const xc = rect.width / 2;
     const yc = rect.height / 2;
-    
-    const rotateX = -(y - yc) / (rect.height / 8);
-    const rotateY = (x - xc) / (rect.width / 8);
-    
+    const rotateX = -(y - yc) / (rect.height / 6);
+    const rotateY = (x - xc) / (rect.width / 6);
     card.style.setProperty('--rotate-x', `${rotateX}deg`);
     card.style.setProperty('--rotate-y', `${rotateY}deg`);
     card.style.setProperty('--mouse-x', `${x}px`);
     card.style.setProperty('--mouse-y', `${y}px`);
   };
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
+  const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => {
     const card = cardRef.current;
-    if (!card) return;
-    card.style.setProperty('--rotate-x', '0deg');
-    card.style.setProperty('--rotate-y', '0deg');
+    if (card) {
+      card.style.setProperty('--rotate-x', '0deg');
+      card.style.setProperty('--rotate-y', '0deg');
+    }
     setIsHovered(false);
   };
-
-  const cardVariants = getCardVariants();
 
   const handleCardClick = () => {
     navigate(`/services/${service.slug}`);
   };
 
-  // Get technology highlights with icons
+  // ===== TECH ICONS =====
   const getTechIcon = (tech) => {
-    const techLower = tech.toLowerCase();
-    if (techLower.includes('react')) return '⚛️';
-    if (techLower.includes('node')) return '🚀';
-    if (techLower.includes('python')) return '🐍';
-    if (techLower.includes('aws')) return '☁️';
-    if (techLower.includes('docker')) return '🐳';
-    if (techLower.includes('vue')) return '🟢';
-    if (techLower.includes('angular')) return '🔴';
-    if (techLower.includes('mongodb')) return '🍃';
-    if (techLower.includes('postgres')) return '🐘';
-    if (techLower.includes('firebase')) return '🔥';
-    if (techLower.includes('next')) return '▲';
-    if (techLower.includes('typescript')) return '📘';
+    const t = tech.toLowerCase();
+    if (t.includes('react')) return '⚛️';
+    if (t.includes('node')) return '🚀';
+    if (t.includes('python')) return '🐍';
+    if (t.includes('aws')) return '☁️';
+    if (t.includes('docker')) return '🐳';
+    if (t.includes('vue')) return '🟢';
+    if (t.includes('angular')) return '🔴';
+    if (t.includes('mongodb')) return '🍃';
+    if (t.includes('postgres')) return '🐘';
+    if (t.includes('firebase')) return '🔥';
+    if (t.includes('next')) return '▲';
+    if (t.includes('typescript')) return '📘';
     return '⚡';
   };
+
+  const cardVariants = getCardVariants();
 
   return (
     <motion.div
@@ -240,82 +214,56 @@ const ServiceCard = ({ service, index, parallaxY }) => {
       onClick={handleCardClick}
       style={{ y: parallaxY }}
     >
-      {/* Animated Background Glow */}
-      <motion.div 
+      {/* ===== GLOW ===== */}
+      <motion.div
         className="service-card-glow"
         variants={glowVariants}
         initial="initial"
         animate={isHovered ? "hover" : "animate"}
         style={{
           background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-            rgba(229, 182, 62, ${isHovered ? 0.15 : 0.05}), 
+            rgba(255, 215, 80, ${isHovered ? 0.25 : 0.08}), 
             transparent 70%)`
         }}
       />
 
-      {/* High-tech background pattern */}
+      {/* ===== BG GRAPHIC (circuit) ===== */}
       <div className="service-card-bg-graphic">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none">
           <defs>
-            <pattern id={`circuit-grid-${service.slug}`} width="30" height="30" patternUnits="userSpaceOnUse">
-              <path d="M 30 0 L 0 0 0 30" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            <pattern id={`circuit-${service.slug}`} width="28" height="28" patternUnits="userSpaceOnUse">
+              <path d="M 28 0 L 0 0 0 28" fill="none" stroke="currentColor" strokeWidth="0.6" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill={`url(#circuit-grid-${service.slug})`} opacity="0.08" />
-          <motion.path 
-            d="M 0 60 L 60 60 L 90 90 L 160 90 L 180 110 L 200 110" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="0.8" 
-            opacity="0.12"
+          <rect width="100%" height="100%" fill={`url(#circuit-${service.slug})`} opacity="0.06" />
+          <motion.path
+            d="M 0 50 L 50 50 L 80 80 L 150 80 L 170 100 L 200 100"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            opacity="0.1"
             animate={{
-              pathLength: isHovered ? 1 : 0.6,
-              opacity: isHovered ? 0.25 : 0.12
+              pathLength: isHovered ? 1 : 0.5,
+              opacity: isHovered ? 0.3 : 0.1
             }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.9 }}
           />
-          <motion.circle 
-            cx="60" cy="60" r="2.5" 
-            fill="currentColor" 
-            opacity="0.2"
-            animate={{
-              r: isHovered ? 4 : 2.5,
-              opacity: isHovered ? 0.5 : 0.2
-            }}
-            transition={{ duration: 0.5 }}
-          />
-          <motion.circle 
-            cx="90" cy="90" r="2.5" 
-            fill="currentColor" 
-            opacity="0.2"
-            animate={{
-              r: isHovered ? 4 : 2.5,
-              opacity: isHovered ? 0.5 : 0.2
-            }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          />
-          <motion.circle 
-            cx="160" cy="90" r="2.5" 
-            fill="currentColor" 
-            opacity="0.2"
-            animate={{
-              r: isHovered ? 4 : 2.5,
-              opacity: isHovered ? 0.5 : 0.2
-            }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          />
+          <motion.circle cx="50" cy="50" r="4" fill="currentColor" opacity="0.15" animate={{ r: isHovered ? 6 : 4, opacity: isHovered ? 0.4 : 0.15 }} />
+          <motion.circle cx="80" cy="80" r="4" fill="currentColor" opacity="0.15" animate={{ r: isHovered ? 6 : 4, opacity: isHovered ? 0.4 : 0.15 }} />
+          <motion.circle cx="150" cy="80" r="4" fill="currentColor" opacity="0.15" animate={{ r: isHovered ? 6 : 4, opacity: isHovered ? 0.4 : 0.15 }} />
         </svg>
       </div>
 
-      {/* Card floating animation */}
-      <motion.div 
+      {/* ===== CONTENT ===== */}
+      <motion.div
         className="service-card-content"
         variants={floatVariants}
         initial="initial"
         animate={isHovered ? "hover" : "animate"}
       >
+        {/* TOP: ICON + NUMBER */}
         <div className="service-card-top">
-          <motion.div 
+          <motion.div
             className="service-card-icon"
             variants={iconVariants}
             initial="hidden"
@@ -324,131 +272,93 @@ const ServiceCard = ({ service, index, parallaxY }) => {
           >
             <i className={service.icon || 'fas fa-cog'}></i>
           </motion.div>
-          
-          {/* Number badge */}
-          <motion.div 
+          <motion.div
             className="service-number-badge"
             initial={{ opacity: 0, scale: 0 }}
-            animate={isInView ? { 
-              opacity: 0.15, 
-              scale: 1,
-              transition: { delay: index * 0.1 + 0.2, duration: 0.5 }
-            } : {}}
+            animate={isInView ? { opacity: 0.12, scale: 1, transition: { delay: index * 0.1 + 0.2, duration: 0.6 } } : {}}
           >
             {String(index + 1).padStart(2, '0')}
           </motion.div>
         </div>
 
-        <motion.h3 
+        {/* TITLE */}
+        <motion.h3
           className="service-card-title"
-          initial={{ opacity: 0, y: 10 }}
-          animate={isInView ? { 
-            opacity: 1, 
-            y: 0,
-            transition: { delay: index * 0.1 + 0.15 }
-          } : {}}
+          initial={{ opacity: 0, y: 15 }}
+          animate={isInView ? { opacity: 1, y: 0, transition: { delay: index * 0.1 + 0.15 } } : {}}
         >
           {service.title}
         </motion.h3>
 
-        <motion.p 
+        {/* DESCRIPTION */}
+        <motion.p
           className="service-card-desc"
-          initial={{ opacity: 0, y: 10 }}
-          animate={isInView ? { 
-            opacity: 1, 
-            y: 0,
-            transition: { delay: index * 0.1 + 0.25 }
-          } : {}}
+          initial={{ opacity: 0, y: 15 }}
+          animate={isInView ? { opacity: 1, y: 0, transition: { delay: index * 0.1 + 0.25 } } : {}}
         >
           {service.description}
         </motion.p>
 
-        {/* Tech highlights with stagger animation */}
+        {/* TECH HIGHLIGHTS */}
         {service.technologies && service.technologies.length > 0 && (
-          <motion.div 
+          <motion.div
             className="service-card-highlights"
             variants={highlightContainerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
           >
             {service.technologies.slice(0, 3).map((tech, i) => (
-              <motion.div 
-                key={i} 
-                className="highlight-tag"
-                variants={highlightItemVariants}
-                whileHover={{ 
-                  x: 8,
-                  transition: { type: 'spring', stiffness: 200 }
-                }}
-              >
+              <motion.div key={i} className="highlight-tag" variants={highlightItemVariants}>
                 <span className="highlight-icon">{getTechIcon(tech)}</span>
                 <span className="highlight-text">{tech}</span>
-                <motion.span 
+                <motion.span
                   className="highlight-pulse"
-                  animate={{
-                    opacity: [0, 1, 0],
-                    scale: [1, 1.5, 1]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: i * 0.3
-                  }}
+                  animate={{ opacity: [0, 1, 0], scale: [1, 1.6, 1] }}
+                  transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.3 }}
                 />
               </motion.div>
             ))}
           </motion.div>
         )}
 
-        <motion.div 
+        {/* FOOTER */}
+        <motion.div
           className="service-card-footer"
-          initial={{ opacity: 0, y: 10 }}
-          animate={isInView ? { 
-            opacity: 1, 
-            y: 0,
-            transition: { delay: index * 0.1 + 0.4 }
-          } : {}}
+          initial={{ opacity: 0, y: 15 }}
+          animate={isInView ? { opacity: 1, y: 0, transition: { delay: index * 0.1 + 0.4 } } : {}}
         >
-          <motion.span 
+          <motion.span
             className="service-learn-more"
-            whileHover={{ gap: '0.75rem' }}
+            whileHover={{ gap: '1rem' }}
             transition={{ type: 'spring', stiffness: 200 }}
           >
             Learn More
-            <motion.span 
+            <motion.span
               className="learn-more-arrow"
-              animate={isHovered ? { x: 8 } : { x: 0 }}
-              transition={{ type: 'spring', stiffness: 200, damping: 10 }}
+              animate={isHovered ? { x: 10 } : { x: 0 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 12 }}
             >
               →
             </motion.span>
           </motion.span>
-          
-          {/* Animated line */}
-          <motion.div 
+          <motion.div
             className="learn-more-line"
             initial={{ scaleX: 0 }}
             animate={isHovered ? { scaleX: 1 } : { scaleX: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.5 }}
           />
         </motion.div>
       </motion.div>
 
-      {/* Corner decorative elements */}
-      <motion.div 
+      {/* CORNER DECORATIONS */}
+      <motion.div
         className="corner-decoration top-right"
-        animate={{
-          rotate: isHovered ? 45 : 0,
-          opacity: isHovered ? 0.3 : 0.1
-        }}
+        animate={{ rotate: isHovered ? 45 : 0, opacity: isHovered ? 0.35 : 0.08 }}
         transition={{ duration: 0.5 }}
       />
-      <motion.div 
+      <motion.div
         className="corner-decoration bottom-left"
-        animate={{
-          rotate: isHovered ? -45 : 0,
-          opacity: isHovered ? 0.3 : 0.1
-        }}
+        animate={{ rotate: isHovered ? -45 : 0, opacity: isHovered ? 0.35 : 0.08 }}
         transition={{ duration: 0.5 }}
       />
     </motion.div>

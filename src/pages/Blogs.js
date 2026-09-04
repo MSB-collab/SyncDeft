@@ -14,8 +14,8 @@ import {
 import './Blogs.css';
 
 // Direct API URL without env
-const API_BASE_URL = 'https://syncdeftserver-production.up.railway.app/api';
-
+// const API_BASE_URL = 'https://syncdeftserver-production.up.railway.app/api';
+const API_BASE_URL = 'http://localhost:5000/api';
 const DEFAULT_BLOG_IMAGE = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="%23f8f9fa"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="32" fill="%23f9c349">SYNC DEFT</text></svg>`;
 
 // Get the base URL without /api for images

@@ -14,7 +14,7 @@ const ServicesPreview = () => {
   const isSectionInView = useInView(sectionRef, { once: false, amount: 0.1 });
   const isHeadingInView = useInView(headingRef, { once: false, amount: 0.1 });
   
-  const featuredSlugs = ['ai-engineering-workflows', 'custom-software-development', 'ai-engineered-marketing'];
+  const featuredSlugs = ['saas-product-development', 'custom-software-development', 'ai-engineered-marketing', ];
   const featuredServices = featuredSlugs
     .map(slug => servicesData.find(s => s.slug === slug))
     .filter(Boolean);
