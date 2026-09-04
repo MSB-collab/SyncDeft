@@ -18,29 +18,25 @@ const API_BASE_URL = 'https://syncdeftserver-production.up.railway.app/api';
 // const API_BASE_URL = 'http://localhost:5000/api';
 const DEFAULT_BLOG_IMAGE = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="%23f8f9fa"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="32" fill="%23f9c349">SYNC DEFT</text></svg>`;
 
-// Get the base URL without /api for images
-const getImageBaseUrl = () => {
-  return API_BASE_URL.replace('/api', '');
-};
-
+// Simple function to get image URL - handles both Cloudinary and local URLs
 const getImageUrl = (imagePath) => {
   if (!imagePath) return DEFAULT_BLOG_IMAGE;
   
-  // If it's already a full URL or data URL, return as is
+  // If it's already a full URL (Cloudinary, HTTP, HTTPS, or data URL), return as is
   if (imagePath.startsWith('http://') || 
       imagePath.startsWith('https://') || 
       imagePath.startsWith('data:')) {
     return imagePath;
   }
   
-  // If it starts with /, just prepend the base URL
-  const baseUrl = getImageBaseUrl();
-  if (imagePath.startsWith('/')) {
+  // For local development, if it starts with /uploads, prepend the base URL
+  if (imagePath.startsWith('/uploads')) {
+    const baseUrl = API_BASE_URL.replace('/api', '');
     return `${baseUrl}${imagePath}`;
   }
   
-  // Otherwise, add a slash between base and path
-  return `${baseUrl}/${imagePath}`;
+  // Default fallback
+  return DEFAULT_BLOG_IMAGE;
 };
 
 const handleImageError = (e) => {
@@ -94,6 +90,10 @@ const Blogs = () => {
         setBlogs([]);
       } else {
         console.log(`Fetched ${data.length} blogs`);
+        // Log first blog to check image URL format
+        if (data.length > 0) {
+          console.log('Sample blog image URL:', data[0].featuredImage || data[0].image);
+        }
         setBlogs(data);
       }
     } catch (error) {
@@ -409,7 +409,7 @@ const Blogs = () => {
               viewport={defaultViewport}
             >
               {blogs.map((blog, i) => {
-                // Get the image URL using the utility function
+                // Get the image URL - Cloudinary URLs are already full URLs
                 const imageUrl = getImageUrl(blog.featuredImage || blog.image);
                 
                 return (
