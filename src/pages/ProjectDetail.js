@@ -1,244 +1,259 @@
 // ProjectDetail.jsx
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { renderTechBadge } from '../utils/techIconMap';
 import './ProjectDetail.css';
 
-// Direct API URL without env
 const API_BASE_URL = 'https://syncdeftserver-production.up.railway.app/api';
 
-const DEFAULT_PROJECT_IMAGE = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="%23f8f9fa"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="32" fill="%23f9c349">SYNC DEFT</text></svg>`;
+const DEFAULT_PROJECT_IMAGE =
+  'data:image/svg+xml;utf8,' +
+  '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">' +
+  '<rect width="1200" height="800" fill="%23eef5ff"/>' +
+  '<rect x="80" y="90" width="1040" height="620" rx="28" fill="%23ffffff" stroke="%23dbe7f7"/>' +
+  '<text x="600" y="400" text-anchor="middle" font-family="Arial,sans-serif" font-size="48" font-weight="700" fill="%230b63f6">PROJECT PREVIEW</text>' +
+  '</svg>';
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) return DEFAULT_PROJECT_IMAGE;
-  if (imagePath.startsWith('http') || imagePath.startsWith('data:')) return imagePath;
+
+  if (
+    imagePath.startsWith('http://') ||
+    imagePath.startsWith('https://') ||
+    imagePath.startsWith('data:')
+  ) {
+    return imagePath;
+  }
+
+  if (imagePath.includes('res.cloudinary.com')) {
+    return imagePath.startsWith('//') ? `https:${imagePath}` : imagePath;
+  }
+
   const baseUrl = API_BASE_URL.replace('/api', '');
-  return `${baseUrl}${imagePath}`;
+
+  if (imagePath.startsWith('/uploads')) {
+    return `${baseUrl}${imagePath}`;
+  }
+
+  return `${baseUrl}/${imagePath.replace(/^\/+/, '')}`;
 };
 
-const handleImageError = (e) => {
-  e.target.src = DEFAULT_PROJECT_IMAGE;
+const handleImageError = (event) => {
+  if (!event?.currentTarget) return;
+  event.currentTarget.onerror = null;
+  event.currentTarget.src = DEFAULT_PROJECT_IMAGE;
 };
 
-const getCategoryIcon = (category) => {
-  const catLower = category?.toLowerCase() || '';
-  if (catLower.includes('web') || catLower.includes('ecommerce')) return 'fa-solid fa-cart-shopping';
-  if (catLower.includes('saas') || catLower.includes('analytics') || catLower.includes('dashboard')) return 'fa-solid fa-chart-simple';
-  if (catLower.includes('mobile') || catLower.includes('fitness')) return 'fa-solid fa-mobile-screen-button';
-  return 'fa-solid fa-laptop';
+const safeArray = (value) => {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  return [];
+};
+
+const getGallery = (project) => {
+  const sources = [
+    project?.gallery,
+    project?.images,
+    project?.screenshots,
+    project?.projectImages,
+  ];
+
+  for (const source of sources) {
+    const items = safeArray(source);
+    if (items.length) {
+      return items
+        .map((item) => {
+          if (typeof item === 'string') return item;
+          return item?.url || item?.image || item?.src || item?.path || '';
+        })
+        .filter(Boolean);
+    }
+  }
+
+  return project?.image ? [project.image] : [];
+};
+
+const getFeatureList = (project) => {
+  const features = safeArray(project?.features || project?.keyFeatures);
+
+  return features.map((feature, index) => {
+    if (typeof feature === 'string') {
+      return {
+        title: feature,
+        description: 'Designed to provide a simple, reliable and user-friendly experience.',
+        icon: ['fa-tags', 'fa-plane', 'fa-book-open', 'fa-calendar-days', 'fa-briefcase', 'fa-file-lines'][index % 6],
+      };
+    }
+
+    return {
+      title: feature?.title || feature?.name || `Feature ${index + 1}`,
+      description:
+        feature?.description ||
+        feature?.desc ||
+        'A core feature designed around the needs of the users.',
+      icon: feature?.icon || ['fa-tags', 'fa-plane', 'fa-book-open', 'fa-calendar-days', 'fa-briefcase', 'fa-file-lines'][index % 6],
+    };
+  });
+};
+
+const getMetricList = (project) => {
+  const metrics = safeArray(project?.metrics || project?.stats || project?.resultsStats);
+
+  return metrics
+    .map((metric) => {
+      if (typeof metric === 'string') return { value: metric, label: '' };
+      return {
+        value: metric?.value || metric?.number || metric?.stat || '',
+        label: metric?.label || metric?.title || metric?.name || '',
+      };
+    })
+    .filter((metric) => metric.value || metric.label)
+    .slice(0, 4);
+};
+
+const getServices = (project) => {
+  const services = safeArray(project?.services || project?.servicesProvided);
+  return services.length
+    ? services
+    : ['UI/UX Design', 'Development', 'Testing', 'Deployment', 'Maintenance'];
+};
+
+const getPlatforms = (project) => {
+  const platforms = safeArray(project?.platforms || project?.platform);
+  if (platforms.length) return platforms.join(', ');
+  return project?.type || project?.projectType || 'Web Application';
+};
+
+const formatDate = (value) => {
+  if (!value) return 'Ongoing';
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+  });
+};
+
+const reveal = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const stagger = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.07,
+    },
+  },
 };
 
 const ProjectDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+
   const [project, setProject] = useState(null);
   const [relatedProjects, setRelatedProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const fetchProjectDetails = async () => {
+      try {
+        setLoading(true);
+        setError('');
+
+        const response = await fetch(`${API_BASE_URL}/projects`);
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch projects: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+        const projects = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.projects)
+            ? data.projects
+            : [];
+
+        const foundProject = projects.find(
+          (item) => item?._id === slug || item?.slug === slug
+        );
+
+        if (!foundProject) {
+          throw new Error('Project not found');
+        }
+
+        if (cancelled) return;
+
+        setProject(foundProject);
+
+        const related = projects
+          .filter(
+            (item) =>
+              item?._id !== foundProject?._id &&
+              item?.slug !== foundProject?.slug &&
+              (!foundProject?.category || item?.category === foundProject?.category)
+          )
+          .slice(0, 3);
+
+        setRelatedProjects(related);
+      } catch (err) {
+        if (!cancelled) {
+          console.error('Error loading project details:', err);
+          setError(err?.message || 'Error loading project.');
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
     fetchProjectDetails();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    }, 100);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = maxScroll > 0 ? (scrollY / maxScroll) * 100 : 0;
-      setScrollProgress(progress);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const gallery = useMemo(() => getGallery(project), [project]);
+  const features = useMemo(() => getFeatureList(project), [project]);
+  const metrics = useMemo(() => getMetricList(project), [project]);
+  const services = useMemo(() => getServices(project), [project]);
 
-  const fetchProjectDetails = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      console.log('Fetching projects from:', `${API_BASE_URL}/projects`);
-      
-      const response = await fetch(`${API_BASE_URL}/projects`);
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      console.log('Projects fetched successfully:', data.length);
-      
-      // Find project by slug (or _id if using ObjectId)
-      const foundProject = data.find(p => p._id === slug || p.slug === slug);
-      
-      if (!foundProject) {
-        throw new Error('Project not found');
-      }
-      
-      setProject(foundProject);
+  const technologies = safeArray(project?.technologies);
 
-      // Find related projects (same category, exclude current)
-      const filteredRelated = data
-        .filter(p => p.category === foundProject.category && p._id !== foundProject._id && p.slug !== foundProject.slug)
-        .slice(0, 3);
-      
-      setRelatedProjects(filteredRelated);
-    } catch (err) {
-      console.error('Error loading project details:', err);
-      setError(err.message || 'Error loading project.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const overviewText =
+    project?.overview ||
+    project?.description ||
+    'A thoughtfully designed digital product built to solve real business needs and deliver a smooth user experience.';
 
-  // Animation Variants
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        duration: 0.7,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }
-  };
+  const challengeText =
+    project?.challenge ||
+    'Users needed a simpler and more unified way to access the most important services and information without switching between multiple platforms.';
 
-  const fadeInLeft = {
-    hidden: { opacity: 0, x: -50 },
-    visible: { 
-      opacity: 1, 
-      x: 0,
-      transition: { 
-        duration: 0.7,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }
-  };
+  const solutionText =
+    project?.solution ||
+    'We designed and developed a clean, scalable and user-friendly platform that brings the core experience into one connected digital product.';
 
-  const fadeInRight = {
-    hidden: { opacity: 0, x: 50 },
-    visible: { 
-      opacity: 1, 
-      x: 0,
-      transition: { 
-        duration: 0.7,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.2,
-      }
-    }
-  };
-
-  const floatAnimation = {
-    float: {
-      y: [0, -12, 0],
-      transition: {
-        duration: 4,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
-  };
-
-  const shimmerVariants = {
-    shimmer: {
-      x: ['-100%', '200%'],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
-  };
-
-  const blockVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.95 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }),
-    hover: {
-      y: -8,
-      transition: {
-        duration: 0.3,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40, scale: 0.95 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        delay: i * 0.08,
-        duration: 0.5,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }),
-    hover: {
-      y: -10,
-      boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
-      transition: {
-        duration: 0.3,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }
-  };
-
-  const techItemVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: (i) => ({
-      opacity: 1,
-      scale: 1,
-      transition: {
-        delay: i * 0.05,
-        duration: 0.4,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }),
-    hover: {
-      scale: 1.12,
-      backgroundColor: '#f9c349',
-      color: '#0D0D0D',
-      boxShadow: '0 8px 30px rgba(249, 195, 73, 0.3)',
-      transition: {
-        duration: 0.3,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }
-  };
+  const resultsText =
+    project?.results ||
+    'The final product delivers a faster, clearer and more engaging experience with a scalable foundation for future growth.';
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner">
-          <i className="fas fa-spinner fa-spin"></i>
-        </div>
+      <div className="project-state-screen">
+        <div className="project-loader" />
         <p>Loading project details...</p>
       </div>
     );
@@ -246,450 +261,511 @@ const ProjectDetail = () => {
 
   if (error || !project) {
     return (
-      <div className="error-container">
-        <i className="fas fa-exclamation-circle"></i>
-        <h2>Error loading project</h2>
+      <div className="project-state-screen project-error-screen">
+        <div className="state-icon">
+          <i className="fas fa-exclamation" />
+        </div>
+        <h2>Project not found</h2>
         <p>{error || 'The requested project could not be found.'}</p>
-        <button onClick={() => navigate('/projects')} className="btn-primary">
+        <button className="case-btn case-btn-primary" onClick={() => navigate('/projects')}>
+          <i className="fas fa-arrow-left" />
           Back to Projects
         </button>
       </div>
     );
   }
 
+  const heroImage = getImageUrl(project.image);
+  const phoneImage = getImageUrl(gallery[1] || project.image);
+
   return (
     <main className="project-detail-page">
-      {/* Scroll Progress Bar */}
-      <motion.div 
-        className="project-scroll-progress"
-        style={{
-          scaleX: scrollProgress / 100,
-          transformOrigin: 'left'
-        }}
-      />
+      {/* HERO */}
+      <section className="case-hero">
+        <div className="case-hero-shape case-shape-one" />
+        <div className="case-hero-shape case-shape-two" />
 
-      {/* ── Hero Section ───────────────────────────────────────────────────── */}
-      <section className="project-hero">
-        <div className="project-hero-bg">
-          <div className="project-hero-bg-gradient"></div>
-          <div className="project-hero-bg-pattern"></div>
-        </div>
-
-        <div className="container">
-          <div className="project-hero-grid">
-            {/* Left Content */}
-            <motion.div
-              className="project-hero-content"
-              variants={fadeInLeft}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.div 
-                className="project-breadcrumb"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <Link to="/projects">Projects</Link>
-                <span className="separator">/</span>
-                <span className="current">{project.title}</span>
-              </motion.div>
-
-              <motion.div 
-                className="project-badge"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3, type: 'spring', stiffness: 300 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <span className="badge-icon">✦</span>
-                <span>{project.category || 'CASE STUDY'}</span>
-              </motion.div>
-
-              <motion.h1 
-                className="project-main-heading"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                {project.title}
-              </motion.h1>
-
-              <motion.p 
-                className="project-description"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                {project.description}
-              </motion.p>
-
-              <motion.div 
-                className="project-gradient-line"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.6, duration: 0.8 }}
-              />
-
-              <motion.div 
-                className="project-meta-grid"
-                variants={staggerContainer}
-                initial="hidden"
-                animate="visible"
-              >
-                {[
-                  { label: 'Client', value: project.client || 'Confidential' },
-                  { label: 'Industry', value: project.industry || 'Technology' },
-                  { label: 'Completed', value: project.completionDate ? new Date(project.completionDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'Ongoing' },
-                ].map((item, index) => (
-                  <motion.div 
-                    key={index}
-                    className="meta-item"
-                    variants={fadeInUp}
-                    whileHover={{ y: -5 }}
-                  >
-                    <span className="meta-label">{item.label}</span>
-                    <span className="meta-value">{item.value}</span>
-                  </motion.div>
-                ))}
-              </motion.div>
-
-              <motion.div 
-                className="project-actions"
-                variants={staggerContainer}
-                initial="hidden"
-                animate="visible"
-              >
-                <motion.div variants={fadeInUp} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link to="/contact" className="btn-primary">
-                    <i className="fas fa-paper-plane"></i>
-                    Start a Project
-                    <i className="fas fa-arrow-right"></i>
-                  </Link>
-                </motion.div>
-                <motion.div variants={fadeInUp} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary">
-                    <i className="fas fa-external-link-alt"></i>
-                    Live Demo
-                  </a>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-
-            {/* Right Side Image */}
-            <motion.div 
-              className="project-hero-image-wrapper"
-              variants={fadeInRight}
-              initial="hidden"
-              animate="visible"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div 
-                className="project-hero-image-container"
-                variants={floatAnimation}
-                animate="float"
-              >
-                <div className="image-wrapper">
-                  <motion.div 
-                    className="image-shimmer"
-                    variants={shimmerVariants}
-                    animate="shimmer"
-                  />
-                  <img 
-                    src={getImageUrl(project.image)} 
-                    alt={project.title} 
-                    onError={handleImageError}
-                  />
-                  <div className="image-overlay-glow"></div>
-                  
-                  {/* Image Badges */}
-                  <div className="image-badges">
-                    <motion.span 
-                      className="image-badge"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.8 }}
-                    >
-                      <i className="fas fa-check-circle"></i>
-                      Completed
-                    </motion.span>
-                    {project.technologies && project.technologies.length > 0 && (
-                      <motion.span 
-                        className="image-badge tech-badge"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.9 }}
-                      >
-                        <i className="fas fa-code"></i>
-                        {project.technologies.length}+ Tech
-                      </motion.span>
-                    )}
-                  </div>
-
-                  {/* Image Stats Overlay */}
-                  <motion.div 
-                    className="image-stats-overlay"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 }}
-                  >
-                    <div className="image-stat">
-                      <span className="image-stat-number">98%</span>
-                      <span className="image-stat-label">Satisfaction</span>
-                    </div>
-                    <div className="image-stat-divider"></div>
-                    <div className="image-stat">
-                      <span className="image-stat-number">2x</span>
-                      <span className="image-stat-label">Faster Delivery</span>
-                    </div>
-                  </motion.div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Wave Divider */}
-        <div className="project-hero-wave">
-          <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg">
-            <path 
-              d="M0,60 C360,0 720,120 1080,60 C1260,30 1380,60 1440,60 L1440,120 L0,120 Z"
-              fill="#0D0D0D"
-              opacity="1"
-            />
-          </svg>
-        </div>
-      </section>
-
-      {/* ── Challenge, Solution, Results Section ───────────────────────────── */}
-      <section className="project-details">
-        <div className="container">
-          {/* Overview */}
-          <motion.div 
-            className="detail-block overview-block"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+        <div className="case-container">
+          <motion.div
+            className="case-breadcrumb"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
           >
-            <div className="detail-block-content">
-              <span className="block-label">Overview</span>
-              <h2>Project Overview</h2>
-              <p>{project.description}</p>
-            </div>
+            <Link to="/">Home</Link>
+            <span>›</span>
+            <Link to="/projects">Projects</Link>
+            <span>›</span>
+            <span className="breadcrumb-current">{project.title}</span>
           </motion.div>
 
-          {/* Challenge */}
-          {project.challenge && (
-            <motion.div 
-              className="detail-block challenge-block"
-              custom={0}
-              variants={blockVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              whileHover="hover"
+          <div className="case-hero-grid">
+            <motion.div
+              className="case-hero-copy"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.65 }}
             >
-              <div className="block-icon-wrapper challenge-icon">
-                <i className="fas fa-exclamation-triangle"></i>
+              <div className="featured-label">
+                <span className="featured-dot" />
+                FEATURED PROJECT
               </div>
-              <div className="detail-block-content">
-                <span className="block-label">Challenge</span>
-                <h2>The Challenge</h2>
-                <p>{project.challenge}</p>
-              </div>
-            </motion.div>
-          )}
 
-          {/* Solution */}
-          {project.solution && (
-            <motion.div 
-              className="detail-block solution-block"
-              custom={1}
-              variants={blockVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              whileHover="hover"
-            >
-              <div className="block-icon-wrapper solution-icon">
-                <i className="fas fa-lightbulb"></i>
-              </div>
-              <div className="detail-block-content">
-                <span className="block-label">Solution</span>
-                <h2>Our Solution</h2>
-                <p>{project.solution}</p>
-              </div>
-            </motion.div>
-          )}
+              <h1>{project.title}</h1>
 
-          {/* Results */}
-          {project.results && (
-            <motion.div 
-              className="detail-block results-block"
-              custom={2}
-              variants={blockVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              whileHover="hover"
-            >
-              <div className="block-icon-wrapper results-icon">
-                <i className="fas fa-chart-line"></i>
-              </div>
-              <div className="detail-block-content">
-                <span className="block-label">Results</span>
-                <h2>The Results</h2>
-                <p>{project.results}</p>
+              <p className="hero-lead">
+                {project.shortDescription ||
+                  project.tagline ||
+                  project.description ||
+                  'A modern digital product designed to connect people, services and opportunities.'}
+              </p>
+
+              <div className="hero-actions">
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="case-btn case-btn-primary"
+                  >
+                    View Live Project
+                    <i className="fas fa-arrow-up-right-from-square" />
+                  </a>
+                )}
+
+                <Link to="/contact" className="case-btn case-btn-outline">
+                  View Case Study
+                  <i className="fas fa-download" />
+                </Link>
               </div>
             </motion.div>
-          )}
+
+            <motion.div
+              className="case-device-scene"
+              initial={{ opacity: 0, x: 35, scale: 0.97 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ duration: 0.75, delay: 0.1 }}
+            >
+              <div className="browser-mockup">
+                <div className="browser-topbar">
+                  <div className="browser-dots">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                  <div className="browser-address">
+                    {project.liveUrl || 'project-preview.app'}
+                  </div>
+                  <div className="browser-controls">
+                    <i className="fas fa-ellipsis" />
+                  </div>
+                </div>
+
+                <div className="browser-screen">
+                  <img
+                    src={heroImage}
+                    alt={`${project.title} preview`}
+                    onError={handleImageError}
+                  />
+                </div>
+              </div>
+
+              <motion.div
+                className="phone-mockup"
+                initial={{ y: 25, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.65, delay: 0.45 }}
+              >
+                <div className="phone-speaker" />
+                <div className="phone-screen">
+                  <img
+                    src={phoneImage}
+                    alt={`${project.title} mobile preview`}
+                    onError={handleImageError}
+                  />
+                </div>
+                <div className="phone-home-bar" />
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* ── Technologies Section ───────────────────────────────────────────── */}
-      {project.technologies && project.technologies.length > 0 && (
-        <section className="project-technologies">
-          <div className="container">
-            <motion.div
-              className="tech-section-header"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="section-badge">Tech Stack</span>
-              <h2 className="section-title">
-                Technologies <span className="text-gradient">Used</span>
-              </h2>
-              <div className="section-divider">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </motion.div>
-
-            <motion.div 
-              className="tech-grid"
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              {project.technologies.map((tech, index) => (
-                <motion.div
-                  key={index}
-                  className="tech-item"
-                  custom={index}
-                  variants={techItemVariants}
-                  whileHover="hover"
+      {/* MAIN CASE STUDY */}
+      <section className="case-main">
+        <div className="case-container">
+          <div className="case-content-grid">
+            <div className="case-primary-content">
+              {/* OVERVIEW + CHALLENGE */}
+              <div className="overview-challenge-grid">
+                <motion.article
+                  className="content-block"
+                  variants={reveal}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.15 }}
                 >
-                  {renderTechBadge(tech)}
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-      )}
+                  <div className="content-heading">
+                    <span className="heading-icon blue-icon">
+                      <i className="fas fa-file-lines" />
+                    </span>
+                    <h2>Overview</h2>
+                  </div>
+                  <p>{overviewText}</p>
+                </motion.article>
 
-      {/* ── Related Projects Section ────────────────────────────────────────── */}
+                <motion.article
+                  className="content-block"
+                  variants={reveal}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.15 }}
+                >
+                  <div className="content-heading">
+                    <span className="heading-icon red-icon">
+                      <i className="fas fa-bullseye" />
+                    </span>
+                    <h2>The Challenge</h2>
+                  </div>
+                  <p>{challengeText}</p>
+                </motion.article>
+              </div>
+
+              {/* SOLUTION */}
+              <motion.article
+                className="content-block solution-content-block"
+                variants={reveal}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.15 }}
+              >
+                <div className="content-heading">
+                  <span className="heading-icon green-icon">
+                    <i className="fas fa-lightbulb" />
+                  </span>
+                  <h2>Our Solution</h2>
+                </div>
+                <p>{solutionText}</p>
+              </motion.article>
+
+              {/* FEATURES */}
+              {features.length > 0 && (
+                <motion.section
+                  className="case-section"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.1 }}
+                  variants={stagger}
+                >
+                  <div className="section-heading-row">
+                    <div className="section-heading-left">
+                      <span className="section-heading-icon blue-icon">
+                        <i className="fas fa-sparkles" />
+                      </span>
+                      <h2>Key Features</h2>
+                    </div>
+                  </div>
+
+                  <div className="feature-grid">
+                    {features.slice(0, 6).map((feature, index) => (
+                      <motion.div
+                        className="feature-card"
+                        key={`${feature.title}-${index}`}
+                        variants={reveal}
+                        whileHover={{ y: -5 }}
+                      >
+                        <div className="feature-card-icon">
+                          <i className={`fas ${feature.icon.replace(/^fa-solid\s+/, '')}`} />
+                        </div>
+                        <h3>{feature.title}</h3>
+                        <p>{feature.description}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
+
+              {/* TECHNOLOGY */}
+              {technologies.length > 0 && (
+                <motion.section
+                  className="case-section technology-section"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.1 }}
+                >
+                  <div className="section-heading-row">
+                    <div className="section-heading-left">
+                      <span className="section-heading-icon blue-icon">
+                        <i className="fas fa-code" />
+                      </span>
+                      <h2>Technology Stack</h2>
+                    </div>
+                  </div>
+
+                  <div className="tech-groups">
+                    <div className="tech-group">
+                      <span className="tech-group-title">Technologies</span>
+                      <div className="tech-list">
+                        {technologies.map((tech, index) => (
+                          <motion.div
+                            className="tech-pill"
+                            key={`${tech}-${index}`}
+                            whileHover={{ y: -3 }}
+                          >
+                            {renderTechBadge(tech)}
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </motion.section>
+              )}
+
+              {/* RESULTS */}
+              <motion.section
+                className="case-section results-section"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+              >
+                <div className="section-heading-row">
+                  <div className="section-heading-left">
+                    <span className="section-heading-icon blue-icon">
+                      <i className="fas fa-chart-line" />
+                    </span>
+                    <h2>Results / Impact</h2>
+                  </div>
+                </div>
+
+                {metrics.length > 0 && (
+                  <div className="metrics-grid">
+                    {metrics.map((metric, index) => (
+                      <div className="metric-card" key={`${metric.value}-${index}`}>
+                        <strong>{metric.value}</strong>
+                        <span>{metric.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <p className="results-copy">{resultsText}</p>
+              </motion.section>
+
+              {/* GALLERY */}
+              {gallery.length > 0 && (
+                <motion.section
+                  className="case-section gallery-section"
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.08 }}
+                >
+                  <div className="section-heading-row">
+                    <div className="section-heading-left">
+                      <span className="section-heading-icon blue-icon">
+                        <i className="fas fa-images" />
+                      </span>
+                      <h2>Project Gallery</h2>
+                    </div>
+                  </div>
+
+                  <div className="gallery-grid">
+                    {gallery.slice(0, 6).map((image, index) => (
+                      <div className={`gallery-item gallery-item-${index + 1}`} key={`${image}-${index}`}>
+                        <img
+                          src={getImageUrl(image)}
+                          alt={`${project.title} screen ${index + 1}`}
+                          onError={handleImageError}
+                          loading="lazy"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
+            </div>
+
+            {/* SIDEBAR */}
+            <aside className="case-sidebar">
+              <div className="info-card">
+                <div className="info-card-title">
+                  <span>PROJECT INFORMATION</span>
+                </div>
+
+                <div className="info-list">
+                  <div className="info-row">
+                    <span className="info-row-icon">
+                      <i className="fas fa-graduation-cap" />
+                    </span>
+                    <div>
+                      <small>Industry</small>
+                      <strong>{project.industry || 'Technology'}</strong>
+                    </div>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-row-icon">
+                      <i className="fas fa-building" />
+                    </span>
+                    <div>
+                      <small>Project Type</small>
+                      <strong>{project.projectType || project.type || 'Web & Mobile Application'}</strong>
+                    </div>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-row-icon">
+                      <i className="fas fa-desktop" />
+                    </span>
+                    <div>
+                      <small>Platform</small>
+                      <strong>{getPlatforms(project)}</strong>
+                    </div>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-row-icon">
+                      <i className="fas fa-calendar-days" />
+                    </span>
+                    <div>
+                      <small>Duration</small>
+                      <strong>{project.duration || '4 Months'}</strong>
+                    </div>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-row-icon">
+                      <i className="fas fa-users" />
+                    </span>
+                    <div>
+                      <small>Team</small>
+                      <strong>{project.team || 'Our Product Team'}</strong>
+                    </div>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-row-icon">
+                      <i className="fas fa-circle-check" />
+                    </span>
+                    <div>
+                      <small>Project Status</small>
+                      <span className="status-badge">
+                        {project.status || 'Live'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {project.liveUrl && (
+                    <div className="info-row">
+                      <span className="info-row-icon">
+                        <i className="fas fa-link" />
+                      </span>
+                      <div>
+                        <small>Live Project</small>
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="live-project-link"
+                        >
+                          {project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                          <i className="fas fa-arrow-up-right-from-square" />
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="info-row">
+                    <span className="info-row-icon">
+                      <i className="fas fa-layer-group" />
+                    </span>
+                    <div>
+                      <small>Services Provided</small>
+                      <strong>{services.join(', ')}</strong>
+                    </div>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-row-icon">
+                      <i className="fas fa-clock" />
+                    </span>
+                    <div>
+                      <small>Completed</small>
+                      <strong>{formatDate(project.completionDate)}</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {project.client && (
+                <div className="client-card">
+                  <span className="client-label">CLIENT</span>
+                  <strong>{project.client}</strong>
+                </div>
+              )}
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      {/* RELATED PROJECTS */}
       {relatedProjects.length > 0 && (
-        <section className="related-projects">
-          <div className="container">
-            <motion.div
-              className="related-header"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="section-badge">More Work</span>
-              <h2 className="section-title">
-                Related <span className="text-gradient">Projects</span>
-              </h2>
-              <div className="section-divider">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </motion.div>
+        <section className="related-section">
+          <div className="case-container">
+            <div className="related-heading">
+              <span className="mini-label">MORE WORK</span>
+              <h2>Related <span>Projects</span></h2>
+            </div>
 
-            <motion.div 
-              className="related-grid"
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              {relatedProjects.map((rel, index) => (
-                <motion.div 
-                  key={rel._id} 
+            <div className="related-grid">
+              {relatedProjects.map((related) => (
+                <motion.article
                   className="related-card"
-                  custom={index}
-                  variants={cardVariants}
-                  whileHover="hover"
-                  onClick={() => navigate(`/projects/${rel._id}`)}
+                  key={related._id || related.slug}
+                  whileHover={{ y: -7 }}
+                  onClick={() => navigate(`/projects/${related.slug || related._id}`)}
                 >
-                  <div className="related-card-image">
-                    <img 
-                      src={getImageUrl(rel.image)} 
-                      alt={rel.title}
+                  <div className="related-image">
+                    <img
+                      src={getImageUrl(related.image)}
+                      alt={related.title}
                       onError={handleImageError}
+                      loading="lazy"
                     />
-                    <div className="related-card-overlay">
-                      <span className="related-category">{rel.category || 'Project'}</span>
+                  </div>
+                  <div className="related-content">
+                    <span>{related.category || 'Project'}</span>
+                    <h3>{related.title}</h3>
+                    <p>{related.description?.substring(0, 100) || 'Explore this project.'}</p>
+                    <div className="related-link">
+                      View Project <i className="fas fa-arrow-right" />
                     </div>
                   </div>
-                  <div className="related-card-content">
-                    <h3>{rel.title}</h3>
-                    <p>{rel.description?.substring(0, 80)}...</p>
-                    <div className="related-card-footer">
-                      <span className="view-link">View Project</span>
-                      <i className="fas fa-arrow-right"></i>
-                    </div>
-                  </div>
-                </motion.div>
+                </motion.article>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
       )}
 
-      {/* ── CTA Section ────────────────────────────────────────────────────── */}
-      <section className="project-cta">
-        <div className="container">
-          <motion.div 
-            className="cta-wrapper"
-            initial={{ opacity: 0, y: 40 }}
+      {/* CTA */}
+      <section className="case-cta">
+        <div className="case-container">
+          <motion.div
+            className="cta-panel"
+            initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
           >
-            <motion.div 
-              className="cta-box"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
-              <div className="cta-content">
-                <span className="cta-badge">Ready to Start?</span>
-                <h2>Interested in a Similar Project?</h2>
-                <p>
-                  Let's collaborate to build something exceptional that elevates 
-                  your business and drives innovation.
-                </p>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link to="/contact" className="btn-primary cta-btn">
-                    <i className="fas fa-rocket"></i>
-                    Let's Talk
-                    <i className="fas fa-arrow-right"></i>
-                  </Link>
-                </motion.div>
-              </div>
-            </motion.div>
+            <div className="cta-rocket">
+              <i className="fas fa-rocket" />
+            </div>
+            <div className="cta-copy">
+              <h2>Have a similar project in mind?</h2>
+              <p>Let's build something amazing together!</p>
+            </div>
+            <Link to="/contact" className="cta-button">
+              Let's Talk
+              <i className="fas fa-arrow-right" />
+            </Link>
           </motion.div>
         </div>
       </section>
